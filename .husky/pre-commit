@@ -1,0 +1,3 @@
+pnpm format
+pnpm format:check
+pnpm check-types
