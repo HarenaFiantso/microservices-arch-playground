@@ -3,6 +3,7 @@ import cors from 'cors';
 import express, { Request, Response } from 'express';
 
 import { shouldBeUser } from './middleware/auth.middleware';
+import categoryRouter from './routes/category.route';
 import productRouter from './routes/product.route';
 import { consumer, producer } from './utils/kafka';
 
@@ -25,6 +26,7 @@ app.get('/test', shouldBeUser, (req, res) => {
 });
 
 app.use('/products', productRouter);
+app.use('/categories', categoryRouter);
 
 const start = async () => {
   try {
