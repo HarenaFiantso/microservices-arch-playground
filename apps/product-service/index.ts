@@ -4,6 +4,7 @@ import express, { Request, Response } from 'express';
 
 import { shouldBeUser } from './middleware/auth.middleware';
 import productRouter from './routes/product.route';
+import { consumer, producer } from './utils/kafka';
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use('/products', productRouter);
 
 const start = async () => {
   try {
+    Promise.all([await producer.connect(), await consumer.connect()]);
     app.listen(process.env.PORT || 8000, () => {
       console.log('Product service is running on ' + (process.env.PORT || 8000));
     });

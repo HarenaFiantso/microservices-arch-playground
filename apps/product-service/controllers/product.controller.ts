@@ -2,6 +2,8 @@ import { prisma, Prisma } from '@kitro/product-db';
 import { StripeProductType } from '@kitro/types';
 import { Request, Response } from 'express';
 
+import { producer } from '../utils/kafka';
+
 export const createProduct = async (req: Request, res: Response) => {
   const data: Prisma.ProductCreateInput = req.body;
 
@@ -28,6 +30,7 @@ export const createProduct = async (req: Request, res: Response) => {
     price: product.price,
   };
 
+  producer.send('product.created', { value: stripeProduct });
   res.status(201).json(product);
 };
 

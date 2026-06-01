@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@clerk/express": "^2.1.22",
+    "@kitro/kafka": "workspace:*",
     "@kitro/product-db": "workspace:*",
     "cors": "^2.8.6",
     "express": "^5.2.1"
