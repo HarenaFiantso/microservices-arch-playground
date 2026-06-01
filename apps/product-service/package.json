@@ -1,0 +1,21 @@
+{
+  "name": "product-service",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "pnpm dlx tsx --env-file=.env --watch ./index.ts",
+    "check-types": "tsc --noEmit"
+  },
+  "keywords": [],
+  "author": "Fiantso Harena",
+  "license": "ISC",
+  "devDependencies": {
+    "@kitro/typescript-config": "workspace:*",
+    "@types/express": "^5.0.6"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
