@@ -1,6 +1,6 @@
 import { clerkMiddleware } from '@clerk/express';
 import cors from 'cors';
-import express, { Request, Response } from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 
 import { shouldBeUser } from './middleware/auth.middleware';
 import categoryRouter from './routes/category.route';
@@ -27,6 +27,11 @@ app.get('/test', shouldBeUser, (req, res) => {
 
 app.use('/products', productRouter);
 app.use('/categories', categoryRouter);
+
+app.use((err: any, req: Request, res: Response) => {
+  console.log(err);
+  return res.status(err.status || 500).json({ message: err.message || 'Internal Server Error!' });
+});
 
 const start = async () => {
   try {
