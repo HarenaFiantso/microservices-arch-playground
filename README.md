@@ -1,159 +1,334 @@
-# Turborepo starter
+# 🛒 Microservices Architecture Playground | Educational E-Commerce Application
 
-This Turborepo starter is maintained by the Turborepo core team.
+![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white)
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white)
+![Express](https://img.shields.io/badge/Express-000000?style=for-the-badge&logo=express&logoColor=white)
+![Kafka](https://img.shields.io/badge/Apache_Kafka-231F20?style=for-the-badge&logo=apache-kafka&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
+![Stripe](https://img.shields.io/badge/Stripe-626EF?style=for-the-badge&logo=stripe&logoColor=white)
+![Clerk](https://img.shields.io/badge/Clerk-FFFFFF?style=for-the-badge&logo=clerk&logoColor=052E3F)
+![Zustand](https://img.shields.io/badge/Zustand-3F51B5?style=for-the-badge&logo=react&logoColor=white)
 
-## Using this example
+A hands-on educational project for learning microservices architecture, event-driven design, and modern full-stack development. This platform demonstrates best practices for building scalable, maintainable, production-ready applications covering user authentication, product browsing, cart management, order processing, and payment handling.
 
-Run the following command:
+## Table of Contents
 
-```sh
-npx create-turbo@latest
+- [🛒 Microservices Architecture Playground | Educational E-Commerce Application](#-microservices-architecture-playground--educational-e-commerce-application)
+  - [Table of Contents](#table-of-contents)
+  - [Architecture](#architecture)
+  - [Project Structure](#project-structure)
+  - [Getting Started](#getting-started)
+  - [Environment Variables](#environment-variables)
+    - [Client App](#client-app)
+    - [Auth Service](#auth-service)
+    - [Product Service](#product-service)
+    - [Order Service](#order-service)
+    - [Payment Service](#payment-service)
+    - [Email Service](#email-service)
+  - [API Reference](#api-reference)
+    - [Authentication](#authentication)
+    - [Products](#products)
+    - [Orders](#orders)
+    - [Payments](#payments)
+    - [Kafka Topics](#kafka-topics)
+  - [Development](#development)
+  - [Notes \& Tips](#notes--tips)
+  - [License](#license)
+
+## Architecture
+
+```mermaid
+flowchart TB
+    subgraph Client
+        frontend["Next.js Frontend"]
+    end
+    subgraph Microservices
+        auth["Auth Service"]
+        product["Product Service"]
+        order["Order Service"]
+        payment["Payment Service"]
+        email["Email Service"]
+    end
+    subgraph Messaging
+        kafka["Kafka Cluster"]
+    end
+    subgraph Databases
+        productDb["Product DB"]
+        orderDb["Order DB"]
+    end
+
+    frontend --> auth
+    frontend --> product
+    frontend --> order
+    frontend --> email
+
+    auth --> kafka
+    product --> kafka
+    order --> kafka
+    payment --> kafka
+    email --> kafka
+
+    product --> productDb
+    order --> orderDb
 ```
 
-## What's inside?
+**Key patterns:**
 
-This Turborepo includes the following packages/apps:
+- **Microservices** — independent services scoped to business domains
+- **Event-Driven** — asynchronous communication via Kafka
+- **API Gateway** — Next.js serves as both frontend and API gateway
+- **Database Per Service** — isolated data ownership per domain
 
-### Apps and Packages
+## Project Structure
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo build
+```
+microservices-ecommerce/
+├── apps/
+│   ├── client/             # Next.js frontend
+│   ├── admin/              # Admin dashboard
+│   ├── auth-service/       # Authentication (port 3003)
+│   ├── product-service/    # Product management (port 3004)
+│   ├── order-service/      # Order processing (port 3005)
+│   ├── payment-service/    # Payment handling (port 3006)
+│   └── email-service/      # Email notifications (port 3007)
+├── packages/
+│   ├── kafka/              # Shared Kafka utilities
+│   ├── eslint-config/      # Shared ESLint config
+│   ├── typescript-config/  # Shared TypeScript config
+│   └── types/              # Shared TypeScript types
+└── turbo.json
 ```
 
-Without global `turbo`, use your package manager:
+| Service         | Responsibility         | Port |
+| --------------- | ---------------------- | ---- |
+| Client          | Frontend & API gateway | 3002 |
+| Auth Service    | Authentication         | 3003 |
+| Product Service | Product management     | 3004 |
+| Order Service   | Order processing       | 3005 |
+| Payment Service | Payment handling       | 3006 |
+| Email Service   | Email notifications    | 3007 |
 
-```sh
-cd my-turborepo
-npx turbo build
-pnpm dlx turbo build
-pnpm exec turbo build
+**Service summaries:**
+
+- **Client** (`apps/client`) — Next.js app handling UI, API calls, Clerk auth, and Zustand state
+- **Admin** (`apps/admin`) — Dashboard for managing products, orders, and users
+- **Auth Service** — REST APIs for authentication, delegates identity to Clerk
+- **Product Service** — Product catalog CRUD, emits Kafka events on changes
+- **Order Service** — Order lifecycle management, integrates with payment service
+- **Payment Service** — Stripe payment processing, webhook handling, and refunds
+- **Email Service** — Transactional emails for order confirmations and notifications via Nodemailer
+
+## Getting Started
+
+**Prerequisites:** Node.js 18+, pnpm 9+, Docker (optional, for Kafka), Git
+
+1. **Clone the repository**
+
+   ```bash
+   git clone https://github.com/HarenaFiantso/microservices-arch-playground.git
+   cd microservices-arch-playground
+   ```
+
+2. **Install dependencies**
+
+   ```bash
+   pnpm install
+   ```
+
+3. **Start Kafka**
+
+   ```bash
+   cd packages/kafka
+   docker-compose up -d
+   ```
+
+4. **Configure environment variables** — see [Environment Variables](#environment-variables)
+
+5. **Run the application**
+
+   ```bash
+   # All services
+   pnpm dev
+
+   # Individual service
+   pnpm dev --filter=client
+   pnpm dev --filter=auth-service
+   ```
+
+> [!IMPORTANT]
+> Never commit `.env` files. Always use environment variables for secrets and sensitive configuration.
+
+## Environment Variables
+
+#### Client App
+
+```env
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
+NEXT_PUBLIC_APP_URL=http://localhost:3002
 ```
 
-You can build a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+#### Auth Service
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo build --filter=docs
+```env
+CLERK_SECRET_KEY=your_clerk_secret_key
+CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
+DATABASE_URL=your_database_url
+KAFKA_BROKERS=localhost:9092
+KAFKA_CLIENT_ID=auth-service
+PORT=3003
 ```
 
-Without global `turbo`:
+#### Product Service
 
-```sh
-npx turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
+```env
+DATABASE_URL=your_database_url
+KAFKA_BROKERS=localhost:9092
+KAFKA_CLIENT_ID=product-service
+PORT=3004
 ```
 
-### Develop
+#### Order Service
 
-To develop all apps and packages, run the following command:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo dev
+```env
+DATABASE_URL=your_database_url
+KAFKA_BROKERS=localhost:9092
+KAFKA_CLIENT_ID=order-service
+PORT=3005
+STRIPE_SECRET_KEY=your_stripe_secret_key
 ```
 
-Without global `turbo`, use your package manager:
+#### Payment Service
 
-```sh
-cd my-turborepo
-npx turbo dev
-pnpm exec turbo dev
-pnpm exec turbo dev
+```env
+KAFKA_BROKERS=localhost:9092
+KAFKA_CLIENT_ID=payment-service
+PORT=3006
+STRIPE_SECRET_KEY=your_stripe_secret_key
+STRIPE_WEBHOOK_SECRET=your_webhook_secret
 ```
 
-You can develop a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+#### Email Service
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo dev --filter=web
+```env
+KAFKA_BROKERS=localhost:9092
+KAFKA_CLIENT_ID=email-service
+PORT=3007
+SMTP_HOST=your_smtp_host
+SMTP_PORT=587
+SMTP_USER=your_smtp_user
+SMTP_PASS=your_smtp_password
 ```
 
-Without global `turbo`:
+## API Reference
 
-```sh
-npx turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
+#### Authentication
+
+```typescript
+POST / api / auth / register; // { email, password, name }
+POST / api / auth / login; // { email, password }
+GET / api / auth / me; // Returns current user profile
 ```
 
-### Remote Caching
+#### Products
+
+```typescript
+GET  /api/products         // List all products (paginated)
+GET  /api/products/:id     // Get product by ID
+POST /api/products         // Create product (admin only)
+```
+
+#### Orders
+
+```typescript
+POST /api/orders              // { items: OrderItem[], shippingAddress }
+GET  /api/orders/:id          // Get order details
+GET  /api/orders/user/:userId // Get user's orders
+```
+
+#### Payments
+
+```typescript
+POST / api / payments / create - payment - intent; // { amount, currency }
+POST / api / payments / webhook; // Stripe webhook for payment updates
+```
+
+#### Kafka Topics
+
+```typescript
+const TOPICS = {
+  USER_CREATED: 'user.created',
+  PRODUCT_UPDATED: 'product.updated',
+  ORDER_PLACED: 'order.placed',
+  PAYMENT_COMPLETED: 'payment.completed',
+  EMAIL_SENT: 'email.sent',
+};
+```
+
+Services communicate either synchronously via REST (immediate responses) or asynchronously via Kafka (decoupled events).
+
+## Development
+
+```bash
+pnpm dev          # Start all services
+pnpm build        # Build all services
+pnpm lint         # Lint all code
+pnpm format       # Format code
+pnpm check-types  # Type check
+```
+
+All services support hot reloading. Run `pnpm dev` inside any `apps/*` directory to start a service independently.
+
+> [!NOTE]
+> The monorepo uses pnpm workspaces for package management and Turbo for task orchestration and caching. Shared configuration lives in `packages/`.
+
+## Notes & Tips
+
+> [!IMPORTANT]
+>
+> - Validate all user inputs to prevent injection attacks
+> - Always use HTTPS in production; implement CORS restrictions
+> - Use rate limiting to protect against abuse
+> - Keep dependencies updated
+
+> [!IMPORTANT]
+>
+> - Create topics with appropriate partition counts
+> - Set retention policies per topic
+> - Enable SSL/TLS for broker connections
+> - Monitor consumer lag and throughput
+
+> [!NOTE]
+>
+> **Why Kafka?** Event-driven architecture enables loose coupling, scalable message processing, and support for event sourcing patterns.
+>
+> **Why Microservices?** Independent deployability, fault isolation, and team autonomy at the cost of operational complexity.
+>
+> **Why Next.js?** Server-side rendering for SEO, built-in API routes, and fast refresh during development.
 
 > [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
+>
+> - Start with the auth service and build incrementally
+> - Use mock data before wiring up real services
+> - Add database indexes for frequently queried fields
+> - Commit often with descriptive messages
 
-Turborepo can use a technique known as [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+> [!TIP]
+>
+> - Batch database queries (chunk large ID arrays into groups of 100)
+> - Cache frequently accessed data to reduce DB load
+> - Use lazy loading and code splitting on the frontend
+> - Optimize images with modern formats and compression
 
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
+> [!TIP]
+>
+> - Add a test suite
+> - Set up Redis caching
+> - Configure CI/CD
+> - Expand API documentation with request/response examples
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
+## License
 
-```sh
-cd my-turborepo
-turbo login
-```
-
-Without global `turbo`, use your package manager:
-
-```sh
-cd my-turborepo
-npx turbo login
-pnpm exec turbo login
-pnpm exec turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo link
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo link
-pnpm exec turbo link
-pnpm exec turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.dev/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.dev/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.dev/docs/reference/configuration)
-- [CLI Usage](https://turborepo.dev/docs/reference/command-line-reference)
+This project is for educational purposes only. Ensure you have the necessary permissions before using any part of it in production.
