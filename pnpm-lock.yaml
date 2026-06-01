@@ -45,6 +45,9 @@ importers:
       '@kitro/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
+      '@kitro/types':
+        specifier: workspace:*
+        version: link:../../packages/types
       '@kitro/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config

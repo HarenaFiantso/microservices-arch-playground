@@ -1,8 +1,42 @@
 import { Suspense } from 'react';
 
-import { Categories } from './categories';
+import Link from 'next/link';
 
-export function ProductList() {
+import { ProductType } from '@kitro/types';
+
+import { Categories } from './categories';
+import { Filter } from './filter';
+import { ProductCard } from './product-card';
+
+interface ProductListProps {
+  category: string;
+  sort?: string;
+  search?: string;
+  params: 'homepage' | 'products';
+}
+
+const fetchData = async ({
+  category,
+  sort,
+  search,
+  params,
+}: {
+  category?: string;
+  sort?: string;
+  search?: string;
+  params: 'homepage' | 'products';
+}) => {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_PRODUCT_SERVICE_URL}/products?${category ? `category=${category}` : ''}${search ? `&search=${search}` : ''}&sort=${sort || 'newest'}${params === 'homepage' ? '&limit=8' : ''}`
+  );
+  console.log('Fetching from:', res.url);
+  const data: ProductType[] = await res.json();
+  return data;
+};
+
+export async function ProductList({ category, sort, search, params }: ProductListProps) {
+  const products = await fetchData({ category, sort, search, params });
+
   return (
     <div className="w-full">
       <Suspense
@@ -16,7 +50,18 @@ export function ProductList() {
       >
         <Categories />
       </Suspense>
-      <p>Something</p>
+      {params === 'products' && <Filter />}
+      <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+        {products.map((product) => (
+          <ProductCard key={product.id} product={product} />
+        ))}
+      </div>
+      <Link
+        href={category ? `/products/?category=${category}` : '/products'}
+        className="mt-4 flex justify-end text-sm text-gray-500 underline"
+      >
+        View all products
+      </Link>
     </div>
   );
 }
