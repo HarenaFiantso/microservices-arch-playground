@@ -12,12 +12,15 @@
   "author": "Fiantso Harena",
   "license": "ISC",
   "devDependencies": {
-    "@kitro/typescript-config": "workspace:*",
     "@kitro/types": "workspace:*",
+    "@kitro/typescript-config": "workspace:*",
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6"
   },
   "dependencies": {
     "@clerk/express": "^2.1.22",
+    "@kitro/product-db": "workspace:*",
+    "cors": "^2.8.6",
     "express": "^5.2.1"
   }
 }

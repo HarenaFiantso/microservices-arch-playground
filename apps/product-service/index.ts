@@ -1,10 +1,14 @@
 import { clerkMiddleware } from '@clerk/express';
+import cors from 'cors';
 import express, { Request, Response } from 'express';
 
 import { shouldBeUser } from './middleware/auth.middleware';
+import productRouter from './routes/product.route';
 
 const app = express();
 
+app.use(cors());
+app.use(express.json());
 app.use(clerkMiddleware());
 
 app.get('/health', (req: Request, res: Response) => {
@@ -18,6 +22,8 @@ app.get('/health', (req: Request, res: Response) => {
 app.get('/test', shouldBeUser, (req, res) => {
   res.json({ message: 'Product service authenticated', userId: req.userId });
 });
+
+app.use('/products', productRouter);
 
 const start = async () => {
   try {
