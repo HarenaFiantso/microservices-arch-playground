@@ -30,3 +30,15 @@ export const createProduct = async (req: Request, res: Response) => {
 
   res.status(201).json(product);
 };
+
+export const updateProduct = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const data: Prisma.ProductUpdateInput = req.body;
+
+  const updatedProduct = await prisma.product.update({
+    where: { id: Number(id) },
+    data,
+  });
+
+  return res.status(200).json(updatedProduct);
+};
