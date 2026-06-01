@@ -76,6 +76,9 @@ importers:
         specifier: ^5.2.1
         version: 5.2.1
     devDependencies:
+      '@kitro/types':
+        specifier: workspace:*
+        version: link:../../packages/types
       '@kitro/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config

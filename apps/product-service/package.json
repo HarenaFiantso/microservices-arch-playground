@@ -13,9 +13,11 @@
   "license": "ISC",
   "devDependencies": {
     "@kitro/typescript-config": "workspace:*",
+    "@kitro/types": "workspace:*",
     "@types/express": "^5.0.6"
   },
   "dependencies": {
+    "@clerk/express": "^2.1.22",
     "express": "^5.2.1"
   }
 }
