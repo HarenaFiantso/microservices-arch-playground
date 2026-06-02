@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 import { Bell, Footprints, Home, ShoppingCartIcon } from 'lucide-react';
 
-import { SearchBar } from './search-bar';
+import { SearchBarWrapper } from './search-bar';
 
 export function Navbar() {
   return (
@@ -14,7 +14,7 @@ export function Navbar() {
         <p className="hidden text-xl font-bold tracking-[0.18em] md:block">KITRO.</p>
       </Link>
       <div className="flex items-center gap-6">
-        <SearchBar />
+        <SearchBarWrapper />
         <Link href="/">
           <Home className="h-4 w-4 text-gray-600" />
         </Link>
