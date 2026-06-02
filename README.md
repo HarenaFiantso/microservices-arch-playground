@@ -14,9 +14,14 @@
 
 A hands-on educational project for learning microservices architecture, event-driven design, and modern full-stack development. This platform demonstrates best practices for building scalable, maintainable, production-ready applications covering user authentication, product browsing, cart management, order processing, and payment handling.
 
+## Preview
+
+![Kitro](.github/assets/preview.png)
+
 ## Table of Contents
 
 - [🛒 Microservices Architecture Playground | Educational E-Commerce Application](#-microservices-architecture-playground--educational-e-commerce-application)
+  - [Preview](#preview)
   - [Table of Contents](#table-of-contents)
   - [Architecture](#architecture)
   - [Project Structure](#project-structure)
