@@ -51,9 +51,15 @@ export async function ProductList({ category, sort, search, params }: ProductLis
       </Suspense>
       {params === 'products' && <Filter />}
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-        {products.length === 0
-          ? 'No products found'
-          : products.map((product) => <ProductCard key={product.id} product={product} />)}
+        {products.length === 0 ? (
+          <div className="col-span-full flex min-h-100 flex-col items-center justify-center text-center">
+            <h1 className="text-bold text-4xl text-gray-300">(╥﹏╥)</h1>
+            <p className="text-lg font-medium text-gray-600">No products found</p>
+            <p className="mt-1 text-sm text-gray-400">Check back soon for new arrivals</p>
+          </div>
+        ) : (
+          products.map((product) => <ProductCard key={product.id} product={product} />)
+        )}
       </div>
       <Link
         href={category ? `/products/?category=${category}` : '/products'}
