@@ -6,6 +6,7 @@ export * from './footer';
 export * from './navbar';
 export * from './product-interaction';
 export * from './product-list';
+export * from './profile-button';
 export * from './search-bar';
 export * from './shipping-form';
 export * from './shopping-cart';

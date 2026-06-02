@@ -1,7 +1,9 @@
 import Link from 'next/link';
 
+import { Show, SignInButton } from '@clerk/nextjs';
 import { Footprints, Home } from 'lucide-react';
 
+import { ProfileButton } from './profile-button';
 import { SearchBarWrapper } from './search-bar';
 import { ShoppingCart } from './shopping-cart';
 
@@ -20,6 +22,12 @@ export function Navbar() {
           <Home className="h-4 w-4 text-gray-600" />
         </Link>
         <ShoppingCart />
+        <Show when="signed-out">
+          <SignInButton />
+        </Show>
+        <Show when="signed-in">
+          <ProfileButton />
+        </Show>
       </div>
     </nav>
   );
