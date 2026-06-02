@@ -26,6 +26,7 @@ export function ProductCard({ product }: { product: ProductType }) {
       <Link href={`/products/${product.id}`}>
         <div className="relative aspect-3/3">
           <Image
+            loading="eager"
             src={(product.images as Record<string, string>)?.[productTypes.color] || ''}
             alt={product.name}
             fill
