@@ -141,11 +141,9 @@ async function main() {
       description: 'High-performance basketball shoe featuring advanced cushioning technology.',
       price: 225,
       sizes: ['40', '41', '42', '43', '44', '45'],
-      colors: ['red', 'white', 'black'],
+      colors: ['orange'],
       images: {
-        red: '/products/wow11-red.png',
-        white: '/products/wow11-white.png',
-        black: '/products/wow11-black.png',
+        orange: '/products/wow11-orange.png',
       },
       categorySlug: 'li-ning',
     },
