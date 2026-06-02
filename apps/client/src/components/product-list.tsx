@@ -49,6 +49,12 @@ export async function ProductList({ category, sort, search, params }: ProductLis
       >
         <Categories />
       </Suspense>
+      <Link
+        href={category ? `/products/?category=${category}` : '/products'}
+        className="mb-4 flex justify-end text-sm text-gray-500 underline"
+      >
+        View all products
+      </Link>
       {params === 'products' && <Filter />}
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
         {products.length === 0 ? (
@@ -61,12 +67,6 @@ export async function ProductList({ category, sort, search, params }: ProductLis
           products.map((product) => <ProductCard key={product.id} product={product} />)
         )}
       </div>
-      <Link
-        href={category ? `/products/?category=${category}` : '/products'}
-        className="mt-4 flex justify-end text-sm text-gray-500 underline"
-      >
-        View all products
-      </Link>
     </div>
   );
 }
