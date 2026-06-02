@@ -27,6 +27,7 @@ export function ProductCard({ product }: { product: ProductType }) {
         <div className="relative aspect-3/3">
           <Image
             loading="eager"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             src={(product.images as Record<string, string>)?.[productTypes.color] || ''}
             alt={product.name}
             fill
