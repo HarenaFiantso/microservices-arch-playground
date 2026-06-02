@@ -39,10 +39,10 @@ export function ProductCard({ product }: { product: ProductCardProduct }) {
         </div>
       </Link>
       <div className="flex flex-col gap-3 p-4">
-        <div>
-          <h2 className="text-sm leading-snug font-semibold text-gray-900">{product.name}</h2>
-          <p className="mt-0.5 line-clamp-1 text-xs text-gray-400">{product.shortDescription}</p>
-        </div>
+        <Link href={`/products/${product.id}`}>
+          <h2 className="text-sm leading-snug font-semibold text-gray-900 hover:underline">{product.name}</h2>
+        </Link>
+        <p className="mt-0.5 line-clamp-1 text-xs text-gray-400">{product.shortDescription}</p>
         <div className="flex items-end gap-5">
           <div className="flex flex-col gap-1">
             <span className="text-[10px] font-semibold tracking-widest text-gray-400 uppercase">Size</span>

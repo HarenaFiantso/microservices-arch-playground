@@ -1,8 +1,8 @@
 'use client';
 
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
 
-import { useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { Search } from 'lucide-react';
 
@@ -14,14 +14,20 @@ function SearchBar() {
 
   const searchParams = useSearchParams();
   const router = useRouter();
+  const pathname = usePathname();
 
   const debouncedValue = useDebounce(value, 400);
+  const prevDebouncedValue = useRef(debouncedValue);
 
   useEffect(() => {
+    if (prevDebouncedValue.current === debouncedValue && pathname !== '/products') {
+      return;
+    }
+    prevDebouncedValue.current = debouncedValue;
+
     if (!isDirty) return;
 
     const currentSearch = searchParams.get('search') || '';
-
     if (currentSearch === debouncedValue) return;
 
     const params = new URLSearchParams(searchParams);
@@ -32,10 +38,14 @@ function SearchBar() {
       params.delete('search');
     }
 
-    router.replace(`/products?${params.toString()}`, {
-      scroll: false,
-    });
-  }, [debouncedValue, isDirty, router, searchParams]);
+    if (pathname === '/products') {
+      router.replace(`/products?${params.toString()}`, {
+        scroll: false,
+      });
+    } else {
+      router.push(`/products?${params.toString()}`);
+    }
+  }, [debouncedValue, isDirty, router, searchParams, pathname]);
 
   return (
     <div className="hidden items-center gap-2 rounded-md border border-gray-200 px-3.5 py-2 transition-all duration-200 focus-within:border-gray-400 focus-within:shadow-sm sm:flex">
