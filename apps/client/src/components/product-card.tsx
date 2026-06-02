@@ -7,6 +7,9 @@ import Link from 'next/link';
 
 import { ProductType } from '@kitro/types';
 import { ShoppingCart } from 'lucide-react';
+import { toast } from 'react-toastify';
+
+import useCartStore from '@/stores/cart-store';
 
 type ProductCardProduct = ProductType & {
   discount?: number;
@@ -20,8 +23,20 @@ export function ProductCard({ product }: { product: ProductCardProduct }) {
     color: product.colors[0]!,
   });
 
+  const { addToCart } = useCartStore();
+
   const handleProductType = ({ type, value }: { type: 'size' | 'color'; value: string }) => {
     setProductTypes((prev) => ({ ...prev, [type]: value }));
+  };
+
+  const handleAddToCart = () => {
+    addToCart({
+      ...product,
+      quantity: 1,
+      selectedSize: productTypes.size,
+      selectedColor: productTypes.color,
+    });
+    toast.success('Product added to cart');
   };
 
   return (
@@ -83,7 +98,10 @@ export function ProductCard({ product }: { product: ProductCardProduct }) {
           <div className="flex flex-col leading-tight">
             <span className="text-sm font-bold text-gray-900">${product.price.toFixed(2)}</span>
           </div>
-          <button className="flex cursor-pointer items-center gap-1.5 rounded-xl bg-gray-900 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition-all duration-200 hover:bg-gray-700 active:scale-95">
+          <button
+            onClick={handleAddToCart}
+            className="flex cursor-pointer items-center gap-1.5 rounded-xl bg-gray-900 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition-all duration-200 hover:bg-gray-700 active:scale-95"
+          >
             <ShoppingCart className="h-3.5 w-3.5" />
             Add to Cart
           </button>

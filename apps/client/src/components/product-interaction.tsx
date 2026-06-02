@@ -6,6 +6,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { ProductType } from '@kitro/types';
 import { Minus, Plus, ShoppingCart } from 'lucide-react';
+import { toast } from 'react-toastify';
 
 import useCartStore from '@/stores/cart-store';
 
@@ -54,7 +55,7 @@ export function ProductInteraction({
       selectedColor,
       selectedSize,
     });
-    // toast.success('Product added to cart');
+    toast.success('Product added to cart');
   };
 
   return (

@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import { Raleway } from 'next/font/google';
 
+import { Bounce, ToastContainer } from 'react-toastify';
+
 import { Footer, Navbar } from '@/components';
 
 import './globals.css';
@@ -29,6 +31,20 @@ export default function RootLayout({
           {children}
           <Footer />
         </div>
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick={false}
+          rtl={false}
+          toastClassName={`${raleway.className} text-sm font-medium`}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+          transition={Bounce}
+        />
       </body>
     </html>
   );
