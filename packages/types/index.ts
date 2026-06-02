@@ -1,3 +1,3 @@
-export * from './auth.js';
-export * from './cart.js';
-export * from './product.js';
+export * from './auth';
+export * from './cart';
+export * from './product';

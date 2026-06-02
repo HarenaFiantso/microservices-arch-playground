@@ -1,7 +1,3 @@
 {
-  "extends": "@kitro/typescript-config/base.json",
-  "compilerOptions": {
-    "module": "ESNext",
-    "moduleResolution": "Bundler"
-  }
+  "extends": "@kitro/typescript-config/base.json"
 }
