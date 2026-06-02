@@ -5,11 +5,6 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 const categories = [
   {
-    name: 'All',
-    image: '/brands/all.png',
-    slug: 'all',
-  },
-  {
     name: '361°',
     image: '/brands/361.png',
     slug: '361',
@@ -25,11 +20,6 @@ const categories = [
     slug: 'anta',
   },
   {
-    name: 'Converse',
-    image: '/brands/converse.png',
-    slug: 'converse',
-  },
-  {
     name: 'Jordan',
     image: '/brands/jordan.png',
     slug: 'jordan',
@@ -37,12 +27,7 @@ const categories = [
   {
     name: 'Li-ning',
     image: '/brands/li-ning.png',
-    slug: 'lining',
-  },
-  {
-    name: 'New balance',
-    image: '/brands/new-balance.png',
-    slug: 'new-balance',
+    slug: 'li-ning',
   },
   {
     name: 'Nike',
