@@ -96,6 +96,9 @@ importers:
 
   apps/payment-service:
     dependencies:
+      '@clerk/backend':
+        specifier: ^3.4.14
+        version: 3.4.14(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@hono/clerk-auth':
         specifier: ^3.0.3
         version: 3.1.1(hono@4.12.23)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -105,12 +108,15 @@ importers:
       '@kitro/kafka':
         specifier: workspace:*
         version: link:../../packages/kafka
+      '@kitro/product-db':
+        specifier: workspace:*
+        version: link:../../packages/product-db
       hono:
         specifier: ^4.9.6
         version: 4.12.23
       stripe:
-        specifier: ^18.5.0
-        version: 18.5.0(@types/node@20.19.41)
+        specifier: ^22.2.0
+        version: 22.2.0(@types/node@20.19.41)
     devDependencies:
       '@kitro/types':
         specifier: workspace:*
@@ -216,6 +222,9 @@ importers:
       '@prisma/client':
         specifier: ^6.16.0
         version: 6.19.3(prisma@6.19.3(typescript@5.9.2))(typescript@5.9.2)
+      stripe:
+        specifier: ^18.5.0
+        version: 18.5.0(@types/node@24.12.4)
     devDependencies:
       '@kitro/typescript-config':
         specifier: workspace:*
@@ -223,6 +232,9 @@ importers:
       '@types/node':
         specifier: ^24.3.1
         version: 24.12.4
+      dotenv:
+        specifier: ^17.4.2
+        version: 17.4.2
       prisma:
         specifier: ^6.16.0
         version: 6.19.3(typescript@5.9.2)
@@ -1346,6 +1358,10 @@ packages:
     resolution: {integrity: sha512-uBq4egWHTcTt33a72vpSG0z3HnPuIl6NqYcTrKEg2azoEyl2hpW0zqlxysq2pK9HlDIHyHyakeYaYnSAwd8bow==}
     engines: {node: '>=12'}
 
+  dotenv@17.4.2:
+    resolution: {integrity: sha512-nI4U3TottKAcAD9LLud4Cb7b2QztQMUEfHbvhTH09bqXTxnSie8WnjPALV/WMCrJZ6UV/qHJ6L03OqO3LcdYZw==}
+    engines: {node: '>=12'}
+
   dunder-proto@1.0.1:
     resolution: {integrity: sha512-KIN/nDJBQRcXw0MLVhZE9iQHmG68qAVIBg9CqmUYjmQIhgij9U5MFvrqkUL5FbtyyzZuOeOt0zdeRe4UY7ct+A==}
     engines: {node: '>= 0.4'}
@@ -2458,6 +2474,15 @@ packages:
     engines: {node: '>=12.*'}
     peerDependencies:
       '@types/node': '>=12.x.x'
+    peerDependenciesMeta:
+      '@types/node':
+        optional: true
+
+  stripe@22.2.0:
+    resolution: {integrity: sha512-WFGpMOom9QZqso1kcnSwJsCdC1QHDlMoCOxBZRf3JraMzhkfw7dgSdD2a1CFZrqC+mzAfqeEtYILrZhWKIDruA==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      '@types/node': '>=18'
     peerDependenciesMeta:
       '@types/node':
         optional: true
@@ -3661,6 +3686,8 @@ snapshots:
   dotenv@16.0.3: {}
 
   dotenv@16.6.1: {}
+
+  dotenv@17.4.2: {}
 
   dunder-proto@1.0.1:
     dependencies:
@@ -4924,9 +4951,13 @@ snapshots:
 
   strip-json-comments@3.1.1: {}
 
-  stripe@18.5.0(@types/node@20.19.41):
+  stripe@18.5.0(@types/node@24.12.4):
     dependencies:
       qs: 6.15.2
+    optionalDependencies:
+      '@types/node': 24.12.4
+
+  stripe@22.2.0(@types/node@20.19.41):
     optionalDependencies:
       '@types/node': 20.19.41
 

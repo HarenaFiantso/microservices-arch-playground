@@ -9,7 +9,7 @@ datasource db {
 }
 
 model Product {
-  id               Int      @id @default(autoincrement())
+  id               String    @id @default(cuid())
   name             String
   shortDescription String
   description      String
@@ -21,10 +21,11 @@ model Product {
   updatedAt        DateTime @updatedAt
   categorySlug     String
   category         Category @relation(fields: [categorySlug], references: [slug])
+  stripePriceId    String? 
 }
 
 model Category {
-  id       Int       @id @default(autoincrement())
+  id       String    @id @default(cuid())
   name     String
   slug     String    @unique
   products Product[]

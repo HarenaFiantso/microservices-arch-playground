@@ -1,12 +1,18 @@
+import Stripe from 'stripe';
+
 import { PrismaClient } from '../generated/prisma';
 
 const prisma = new PrismaClient();
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 async function main() {
   console.log('Starting seed...');
 
   await prisma.product.deleteMany();
   await prisma.category.deleteMany();
+
+  const existingProducts = await stripe.products.list({ limit: 100 });
+  await Promise.all(existingProducts.data.map((p) => stripe.products.update(p.id, { active: false })));
 
   const categories = [
     { name: '361°', slug: '361' },
@@ -163,9 +169,22 @@ async function main() {
     },
   ];
 
-  await prisma.product.createMany({
-    data: products,
-  });
+  for (const product of products) {
+    const stripePrice = await stripe.prices.create({
+      currency: 'usd',
+      unit_amount: product.price * 100,
+      product_data: {
+        name: product.name,
+      },
+    });
+
+    await prisma.product.create({
+      data: {
+        ...product,
+        stripePriceId: stripePrice.id,
+      },
+    });
+  }
 
   console.log(`Seeded ${categories.length} categories`);
   console.log(`Seeded ${products.length} products`);

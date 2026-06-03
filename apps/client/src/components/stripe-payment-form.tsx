@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useAuth } from '@clerk/nextjs';
 import { CartItemsType, ShippingFormInputs } from '@kitro/types';
@@ -12,16 +12,20 @@ import useCartStore from '@/stores/cart-store';
 
 import { CheckoutForm } from './checkout-form';
 
+const stripe = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string);
+
 const fetchClientSecret = async (cart: CartItemsType, token: string) => {
   return fetch(`${process.env.NEXT_PUBLIC_PAYMENT_SERVICE_URL}/sessions/create-checkout-session`, {
     method: 'POST',
-    body: JSON.stringify({ cart }),
+    body: JSON.stringify({
+      cart,
+    }),
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
   })
-    .then((res) => res.json())
+    .then((response) => response.json())
     .then((json) => json.checkoutSessionClientSecret);
 };
 
@@ -59,39 +63,20 @@ function PaymentSkeleton() {
 export function StripePaymentForm({ shippingForm }: { shippingForm: ShippingFormInputs }) {
   const { cart } = useCartStore();
   const [token, setToken] = useState<string | null>(null);
-  const [tokenLoading, setTokenLoading] = useState(true);
   const { getToken } = useAuth();
 
-  const stripePromise = useMemo(() => {
-    const key = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
-    if (!key) {
-      console.error('Missing NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY');
-      return null;
-    }
-    return loadStripe(key);
-  }, []);
-
   useEffect(() => {
-    getToken()
-      .then((t) => {
-        console.log('Token:', t);
-        setToken(t);
-      })
-      .finally(() => setTokenLoading(false));
+    getToken().then((token) => setToken(token));
   }, [getToken]);
 
-  if (!token || tokenLoading) return <PaymentSkeleton />;
+  if (!token) {
+    return <PaymentSkeleton />;
+  }
 
   return (
     <div className="flex flex-col gap-1">
       <p className="mb-4 text-xs font-medium tracking-widest text-gray-400 uppercase">Payment details</p>
-
-      <CheckoutProvider
-        stripe={stripePromise}
-        options={{
-          fetchClientSecret: () => fetchClientSecret(cart, token),
-        }}
-      >
+      <CheckoutProvider stripe={stripe} options={{ fetchClientSecret: () => fetchClientSecret(cart, token) }}>
         <CheckoutForm shippingForm={shippingForm} />
       </CheckoutProvider>
 
