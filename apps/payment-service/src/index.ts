@@ -4,6 +4,7 @@ import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 
 import sessionRoute from './routes/session.route.js';
+import webhookRoute from './routes/webhook.route.js';
 import { consumer, producer } from './utils/kafka.js';
 import { runKafkaSubscriptions } from './utils/subscriptions.js';
 
@@ -21,6 +22,7 @@ app.get('/health', (c) => {
 });
 
 app.route('/sessions', sessionRoute);
+app.route('/webhooks', webhookRoute);
 
 const start = async () => {
   try {
