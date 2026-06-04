@@ -24,7 +24,6 @@ webhookRoute.post('/stripe', async (c) => {
   try {
     event = stripe.webhooks.constructEvent(body, sig!, webhookSecret);
   } catch (error) {
-    console.log('Webhook verification failed!');
     return c.json({ error: 'Webhook verification failed!' }, 400);
   }
 
@@ -34,19 +33,19 @@ webhookRoute.post('/stripe', async (c) => {
 
       const lineItems = await stripe.checkout.sessions.listLineItems(session.id);
 
-      producer.send('payment.successful', {
-        value: {
-          userId: session.client_reference_id,
-          email: session.customer_details?.email,
-          amount: session.amount_total,
-          status: session.payment_status === 'paid' ? 'success' : 'failed',
-          products: lineItems.data.map((item) => ({
-            name: item.description,
-            quantity: item.quantity,
-            price: item.price?.unit_amount,
-          })),
-        },
-      });
+      const payload = {
+        userId: session.client_reference_id,
+        email: session.customer_details?.email,
+        amount: session.amount_total,
+        status: session.payment_status === 'paid' ? 'success' : 'failed',
+        products: lineItems.data.map((item) => ({
+          name: item.description,
+          quantity: item.quantity,
+          price: item.price?.unit_amount,
+        })),
+      };
+
+      await producer.send('payment.successful', { value: payload });
 
       break;
 
