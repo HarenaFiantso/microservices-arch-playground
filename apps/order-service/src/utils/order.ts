@@ -1,0 +1,22 @@
+import { Order } from '@kitro/order-db';
+import { OrderType } from '@kitro/types';
+
+import { producer } from './kafka.js';
+
+export const createOrder = async (order: OrderType) => {
+  const newOrder = new Order(order);
+
+  try {
+    const order = await newOrder.save();
+    producer.send('order.created', {
+      value: {
+        email: order.email,
+        amount: order.amount,
+        status: order.status,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};

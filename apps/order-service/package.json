@@ -18,7 +18,7 @@
     "typescript": "^5.9.2"
   },
   "dependencies": {
-    "@clerk/fastify": "^2.4.30",
+    "@clerk/fastify": "^3.1.33",
     "@kitro/kafka": "workspace:*",
     "@kitro/order-db": "workspace:*",
     "date-fns": "^4.1.0",

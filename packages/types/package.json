@@ -16,6 +16,7 @@
     }
   },
   "dependencies": {
+    "@kitro/order-db": "workspace:*",
     "@kitro/product-db": "workspace:*",
     "zod": "^4.4.3"
   }
