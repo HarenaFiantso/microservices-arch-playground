@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 import { Show, SignInButton } from '@clerk/nextjs';
-import { Footprints, Home } from 'lucide-react';
+import { Footprints, Home, LogIn } from 'lucide-react';
 
 import { ProfileButton } from './profile-button';
 import { SearchBarWrapper } from './search-bar';
@@ -23,7 +23,12 @@ export function Navbar() {
         </Link>
         <ShoppingCart />
         <Show when="signed-out">
-          <SignInButton />
+          <SignInButton mode="modal">
+            <button className="flex cursor-pointer items-center gap-1.5 rounded-xl bg-gray-900 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition-all duration-200 hover:bg-gray-700 active:scale-95">
+              <LogIn className="h-3.5 w-3.5" />
+              Sign In
+            </button>
+          </SignInButton>
         </Show>
         <Show when="signed-in">
           <ProfileButton />
