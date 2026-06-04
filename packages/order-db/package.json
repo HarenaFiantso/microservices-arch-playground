@@ -1,0 +1,14 @@
+{
+  "name": "@kitro/order-db",
+  "version": "0.0.1",
+  "devDependencies": {
+    "@kitro/typescript-config": "workspace:*",
+    "@types/node": "^24.3.1"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "mongoose": "^8.18.1"
+  }
+}
