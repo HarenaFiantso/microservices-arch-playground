@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import { Raleway } from 'next/font/google';
 
+import { ClerkProvider } from '@clerk/nextjs';
+
 import './globals.css';
 
 const raleway = Raleway({
@@ -21,7 +23,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${raleway.className} antialiased`}>{children}</body>
+      <body className={`${raleway.className} antialiased`}>
+        <ClerkProvider>{children}</ClerkProvider>
+      </body>
     </html>
   );
 }
